@@ -14,11 +14,43 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with TickerProviderStateMixin {
+  late AnimationController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 4000))
+      ..forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  void restartAnimation() {
+    controller.reset();
+    controller.forward();
+  }
+  // @override
+  // void didUpdateWidget(covariant Home oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   controller.reset();
+  //   controller.forward();
+  // }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    double beginTweenDX = 0;
+    double beginTweenDY = 0;
+    double endTweenDX = 0;
+    double endTweenDY = 0;
+    print(controller);
+    print(controller.status);
     return Scaffold(
       backgroundColor: const Color(0xff1D1D1D),
       body: Container(
@@ -76,12 +108,21 @@ class _HomeState extends State<Home> {
                   const SizedBox(
                     height: 40,
                   ),
-                  Text(
-                    'Welcome back, John!',
-                    style: GoogleFonts.raleway(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
+                  SlideTransition(
+                    position: Tween<Offset>(
+                            begin: Offset(beginTweenDX, beginTweenDY),
+                            end: Offset(endTweenDX, endTweenDY))
+                        .animate(controller),
+                    child: FadeTransition(
+                      opacity: controller,
+                      child: Text(
+                        'Welcome back, John!',
+                        style: GoogleFonts.raleway(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 17,
@@ -301,11 +342,28 @@ class _HomeState extends State<Home> {
                             fontWeight: FontWeight.bold),
                       ),
                       InkWell(
-                        onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const ComingCelebrities();
-                          }));
+                        onTap: () async {
+                          setState(() {
+                            beginTweenDX = -1;
+                            beginTweenDY = .5;
+                            endTweenDY = 0.5;
+                            endTweenDX = 1;
+                          });
+                          print(beginTweenDX);
+                          controller.status == AnimationStatus.completed
+                              ? restartAnimation()
+                              : controller.forward();
+                          Future.delayed(
+                            const Duration(milliseconds: 4000),
+                            () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) {
+                                  return const ComingCelebrities();
+                                }),
+                              );
+                            },
+                          );
                         },
                         child: Text(
                           'View all',

@@ -1,12 +1,12 @@
 import 'dart:ui';
-
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:event_app/shared/celebrities_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'artist_details.dart';
+
+class ScrollNotifier extends ChangeNotifier{
+  
+}
 
 class ComingCelebrities extends StatefulWidget {
   const ComingCelebrities({Key? key}) : super(key: key);
@@ -16,6 +16,19 @@ class ComingCelebrities extends StatefulWidget {
 }
 
 class _ComingCelebritiesState extends State<ComingCelebrities> {
+  late ScrollController controller;
+  @override
+  void initState() {
+    super.initState();
+    controller = ScrollController(initialScrollOffset: 2000);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -106,6 +119,7 @@ class _ComingCelebritiesState extends State<ComingCelebrities> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.builder(
+                    controller: controller,
                     reverse: true,
                     itemBuilder: (context, index) {
                       return Align(
