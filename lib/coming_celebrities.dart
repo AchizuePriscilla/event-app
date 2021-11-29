@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:event_app/shared/celebrities_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
@@ -102,39 +103,44 @@ class _ComingCelebritiesState extends State<ComingCelebrities> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 20),
                 Expanded(
-                    child: ListView(
-                  children:[
-                    InkWell(
-                      onTap: (){
-                        Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return const ArtistDetails();
-                          }));
-                      },
-                      child: const Celebrities(
-                        imagePath: 'dua_lipa',
-                        celebrityName: 'Dua Lipa',
-                        isLarge: true,
-                      ),
-                    ),
-                    const Celebrities(
-                      imagePath: 'taylor_swift',
-                      celebrityName: 'Taylor Swift',
-                      isLarge: true,
-                    ),
-                    const Celebrities(
-                      imagePath: 'dua_lipa',
-                      celebrityName: 'Dua Lipa',
-                      isLarge: true,
-                    ),
-                   const Celebrities(
-                      imagePath: 'taylor_swift',
-                      celebrityName: 'Taylor Swift',
-                      isLarge: true,
-                    ),
-                  ],
-                ))
+                  child: ListView.builder(
+                    reverse: true,
+                    itemBuilder: (context, index) {
+                      return Align(
+                          child: Opacity(
+                            opacity: index == 3 ? 1 : .75,
+                            child: comingCelebrities[index],
+                          ),
+                          heightFactor: .75,
+                          alignment: Alignment.topCenter);
+                    },
+                    itemCount: comingCelebrities.length,
+                  ),
+                  // child: SingleChildScrollView(
+                  //   child: ColumnSuper(
+                  //     innerDistance: -100,
+                  //     invert: true,
+                  //     children: [
+                  //       InkWell(
+                  //         onTap: () {
+                  //           Navigator.push(context,
+                  //               MaterialPageRoute(builder: (context) {
+                  //             return const ArtistDetails();
+                  //           }));
+                  //         },
+                  //         child: const LargeCelebrityContainer(
+                  //             imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+                  //       ),
+                  //       const LargeCelebrityContainer(
+                  //           imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+                  //       const LargeCelebrityContainer(
+                  //           imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+                  //     ],
+                  //   ),
+                  // ),
+                ),
               ],
             ),
             Align(
@@ -174,6 +180,58 @@ class _ComingCelebritiesState extends State<ComingCelebrities> {
           ],
         ),
       ),
+    );
+  }
+}
+
+List comingCelebrities = [
+  const LargeCelebrityContainer(
+      imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+  const LargeCelebrityContainer(
+      imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+  const LargeCelebrityContainer(
+      imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+  const LargeCelebrityContainer(
+      imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+];
+
+class LargeCelebrityContainer extends StatelessWidget {
+  const LargeCelebrityContainer({
+    required this.celebrityName,
+    required this.imagePath,
+    Key? key,
+  }) : super(key: key);
+  final String celebrityName;
+  final String imagePath;
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    return CircleAvatar(
+      backgroundImage: AssetImage('assets/images/$imagePath.jpeg'),
+      radius: width * .5,
+      child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 70, horizontal: 10),
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0, .9],
+              colors: [Colors.transparent, Color(0xffED5F4A)],
+            ),
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              celebrityName,
+              textAlign: TextAlign.center,
+              softWrap: true,
+              style: GoogleFonts.raleway(
+                  color: Colors.white,
+                  fontSize: 43,
+                  fontWeight: FontWeight.w700),
+            ),
+          )),
     );
   }
 }

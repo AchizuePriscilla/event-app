@@ -117,11 +117,61 @@ class _HomeState extends State<Home> {
                     color: const Color(0xff292929),
                     borderRadius: BorderRadius.circular(20),
                     child: Container(
-                      height: 70,
+                      height: 80,
                       width: width,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: const Color(0xff292929).withOpacity(.5),
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: Stack(
+                              children: const [
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage:
+                                      AssetImage('assets/images/dua_lipa.jpeg'),
+                                ),
+                                Positioned(
+                                  left: 25,
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: AssetImage(
+                                        'assets/images/taylor_swift.jpeg'),
+                                  ),
+                                ),
+                                Positioned(
+                                  left: 50,
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: AssetImage(
+                                        'assets/images/night_event.jpeg'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            'You have 8 new events\nnearby!',
+                            style: GoogleFonts.raleway(
+                              color: Colors.white60,
+                              fontSize: 17,
+                            ),
+                          ),
+                          const Expanded(flex: 1, child: SizedBox()),
+                          const Icon(
+                            Icons.arrow_forward_ios,
+                            color: Color(0xffED5F4A),
+                            size: 25,
+                          ),
+                          const SizedBox(width: 10),
+                        ],
                       ),
                     ),
                   ),
@@ -147,15 +197,15 @@ class _HomeState extends State<Home> {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                    height: 200,
+                    height: 165,
                     child: ListView.builder(
                         itemCount: 5,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return Container(
-                            margin: EdgeInsets.only(right: 20),
-                            height: 200,
-                            width: width * .85,
+                            margin: const EdgeInsets.only(right: 20),
+                            height: 165,
+                            width: width * .75,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(100),
                               image: const DecorationImage(
@@ -167,64 +217,71 @@ class _HomeState extends State<Home> {
                               alignment: Alignment.bottomLeft,
                               child: Container(
                                 height: 50,
-                                width: width * .65,
+                                width: width * .58,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(100),
                                   color:
                                       const Color(0xffED5F4A).withOpacity(.4),
                                 ),
-                                child: Row(children: [
-                                  Container(
-                                    height: 50,
-                                    width: 55,
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xffED5F4A),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          '12',
-                                          style: GoogleFonts.raleway(
-                                              color: Colors.white,
-                                              fontSize: 24,
-                                              fontWeight: FontWeight.bold),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                        sigmaX: 10.0, sigmaY: 10.0),
+                                    child: Row(children: [
+                                      Container(
+                                        height: 50,
+                                        width: 55,
+                                        decoration: const BoxDecoration(
+                                          color: Color(0xffED5F4A),
+                                          shape: BoxShape.circle,
                                         ),
-                                        Text(
-                                          'DEC',
-                                          style: GoogleFonts.raleway(
-                                            color: Colors.white,
-                                            fontSize: 18,
-                                          ),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              '12',
+                                              style: GoogleFonts.raleway(
+                                                  color: Colors.white,
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                              'DEC',
+                                              style: GoogleFonts.raleway(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Winter Night Market',
+                                              style: GoogleFonts.raleway(
+                                                color: Colors.white60,
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Seattle, WA.  21:00',
+                                              style: GoogleFonts.raleway(
+                                                color: Colors.white60,
+                                                fontSize: 16,
+                                              ),
+                                            )
+                                          ])
+                                    ]),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Winter Night Market',
-                                          style: GoogleFonts.raleway(
-                                            color: Colors.white60,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          'Seattle, WA.  21:00',
-                                          style: GoogleFonts.raleway(
-                                            color: Colors.white60,
-                                            fontSize: 16,
-                                          ),
-                                        )
-                                      ])
-                                ]),
+                                ),
                               ),
                             ),
                           );

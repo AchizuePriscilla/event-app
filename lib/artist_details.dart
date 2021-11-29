@@ -25,33 +25,38 @@ class _ArtistDetailsState extends State<ArtistDetails> {
                 const SizedBox(
                   height: 60,
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: IconButton(
+                Stack(
+                  children: [
+                    SizedBox(
+                      height: height * .55,
+                      width: width,
+                      child: OverflowBox(
+                        minWidth: width + width * .3,
+                        minHeight: height * .55,
+                        maxWidth: width + width * .3,
+                        maxHeight: height * .55,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/dua_lipa.jpeg'),
+                                fit: BoxFit.cover),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: IconButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         icon: const Icon(
                           Icons.arrow_back_ios,
                           color: Color(0xffED5F4A),
-                        )),
-                  ),
-                ),
-                Stack(
-                  children: [
-                    Container(
-                      height: height * .55,
-                      width: width,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(180),
-                          bottom: Radius.circular(180),
+                          size: 28,
                         ),
-                        image: DecorationImage(
-                            image: AssetImage('assets/images/dua_lipa.jpeg'),
-                            fit: BoxFit.cover),
                       ),
                     ),
                     Positioned(
