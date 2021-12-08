@@ -15,8 +15,8 @@ class _ArtistDetailsState extends State<ArtistDetails> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
         backgroundColor: const Color(0xff1D1D1D),
-        body: Container(
-          // padding: const EdgeInsets.symmetric(horizontal: 20),
+        body: SizedBox(
+         
           height: height,
           width: width,
           child: SingleChildScrollView(

@@ -1,12 +1,12 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_phosphor_icons/flutter_phosphor_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'artist_details.dart';
 
-class ScrollNotifier extends ChangeNotifier{
-  
-}
+class ScrollNotifier extends ChangeNotifier {}
 
 class ComingCelebrities extends StatefulWidget {
   const ComingCelebrities({Key? key}) : super(key: key);
@@ -15,18 +15,30 @@ class ComingCelebrities extends StatefulWidget {
   _ComingCelebritiesState createState() => _ComingCelebritiesState();
 }
 
-class _ComingCelebritiesState extends State<ComingCelebrities> {
-  late ScrollController controller;
+class _ComingCelebritiesState extends State<ComingCelebrities>
+    with SingleTickerProviderStateMixin {
+  late ScrollController scrollController;
+  late AnimationController animationController;
+  double animationValue = 0;
   @override
   void initState() {
     super.initState();
-    controller = ScrollController(initialScrollOffset: 2000);
+    scrollController = ScrollController(initialScrollOffset: 2000);
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    animationController.addListener(() {
+      setState(() {
+        animationValue = animationController.value;
+      });
+    });
+    Timer(
+        const Duration(milliseconds: 100), () => animationController.forward());
   }
 
   @override
   void dispose() {
     super.dispose();
-    controller.dispose();
+    scrollController.dispose();
   }
 
   @override
@@ -89,12 +101,20 @@ class _ComingCelebritiesState extends State<ComingCelebrities> {
                 const SizedBox(
                   height: 40,
                 ),
-                Text(
-                  'Coming\nCelebrities',
-                  style: GoogleFonts.raleway(
-                      color: Colors.white,
-                      fontSize: 45,
-                      fontWeight: FontWeight.bold),
+                SlideTransition(
+                  position: Tween<Offset>(
+                          begin: const Offset(1, 0.5), end: const Offset(0, 0))
+                      .animate(animationController),
+                  child: Opacity(
+                    opacity: animationValue,
+                    child: Text(
+                      'Coming\nCelebrities',
+                      style: GoogleFonts.raleway(
+                          color: Colors.white,
+                          fontSize: 45,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
                 const SizedBox(
                   height: 17,
@@ -119,16 +139,26 @@ class _ComingCelebritiesState extends State<ComingCelebrities> {
                 const SizedBox(height: 20),
                 Expanded(
                   child: ListView.builder(
-                    controller: controller,
+                    controller: scrollController,
                     reverse: true,
                     itemBuilder: (context, index) {
-                      return Align(
-                          child: Opacity(
-                            opacity: index == 3 ? 1 : .75,
-                            child: comingCelebrities[index],
-                          ),
-                          heightFactor: .75,
-                          alignment: Alignment.topCenter);
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) {
+                              return const ArtistDetails();
+                            }),
+                          );
+                        },
+                        child: Align(
+                            child: Opacity(
+                              opacity: index == 3 ? 1 : .55,
+                              child: comingCelebrities[index],
+                            ),
+                            heightFactor: .75,
+                            alignment: Alignment.topCenter),
+                      );
                     },
                     itemCount: comingCelebrities.length,
                   ),
@@ -205,8 +235,11 @@ List comingCelebrities = [
       imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
   const LargeCelebrityContainer(
       imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
-  const LargeCelebrityContainer(
-      imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+  const Hero(
+    tag: 'hero',
+    child: LargeCelebrityContainer(
+        imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+  ),
 ];
 
 class LargeCelebrityContainer extends StatelessWidget {

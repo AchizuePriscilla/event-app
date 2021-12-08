@@ -16,12 +16,17 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with TickerProviderStateMixin {
   late AnimationController controller;
+  double animationValue = 0;
   @override
   void initState() {
     super.initState();
     controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 4000))
-      ..forward();
+        vsync: this, duration: const Duration(milliseconds: 400));
+    controller.addListener(() {
+      setState(() {
+        animationValue = controller.value;
+      });
+    });
   }
 
   @override
@@ -34,23 +39,31 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
     controller.reset();
     controller.forward();
   }
-  // @override
-  // void didUpdateWidget(covariant Home oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   controller.reset();
-  //   controller.forward();
-  // }
+
+  void navigate() {
+    controller.status == AnimationStatus.completed
+        ? restartAnimation()
+        : controller.forward();
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 2000),
+              pageBuilder: (_, __, ___) {
+                return const ComingCelebrities();
+              }),
+        ).then((value) => controller.reverse());
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    double beginTweenDX = 0;
-    double beginTweenDY = 0;
-    double endTweenDX = 0;
-    double endTweenDY = 0;
-    print(controller);
-    print(controller.status);
+    print(animationValue);
     return Scaffold(
       backgroundColor: const Color(0xff1D1D1D),
       body: Container(
@@ -110,11 +123,11 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                   SlideTransition(
                     position: Tween<Offset>(
-                            begin: Offset(beginTweenDX, beginTweenDY),
-                            end: Offset(endTweenDX, endTweenDY))
+                            begin: const Offset(0, 0),
+                            end: const Offset(1, 0.5))
                         .animate(controller),
-                    child: FadeTransition(
-                      opacity: controller,
+                    child: Opacity(
+                      opacity: 1 - animationValue,
                       child: Text(
                         'Welcome back, John!',
                         style: GoogleFonts.raleway(
@@ -243,84 +256,90 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                         itemCount: 5,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.only(right: 20),
-                            height: 165,
-                            width: width * .75,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              image: const DecorationImage(
-                                  image: AssetImage(
-                                      'assets/images/night_event.jpeg'),
-                                  fit: BoxFit.cover),
-                            ),
-                            child: Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Container(
-                                height: 50,
-                                width: width * .58,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  color:
-                                      const Color(0xffED5F4A).withOpacity(.4),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(
-                                        sigmaX: 10.0, sigmaY: 10.0),
-                                    child: Row(children: [
-                                      Container(
-                                        height: 50,
-                                        width: 55,
-                                        decoration: const BoxDecoration(
-                                          color: Color(0xffED5F4A),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              '12',
-                                              style: GoogleFonts.raleway(
+                          return InkWell(
+                            onTap: () {
+                              navigate();
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(right: 20),
+                              height: 165,
+                              width: width * .75,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                image: const DecorationImage(
+                                    image: AssetImage(
+                                        'assets/images/night_event.jpeg'),
+                                    fit: BoxFit.cover),
+                              ),
+                              child: Align(
+                                alignment: Alignment.bottomLeft,
+                                child: Container(
+                                  height: 50,
+                                  width: width * .58,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    color:
+                                        const Color(0xffED5F4A).withOpacity(.4),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 10.0, sigmaY: 10.0),
+                                      child: Row(children: [
+                                        Container(
+                                          height: 50,
+                                          width: 55,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xffED5F4A),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '12',
+                                                style: GoogleFonts.raleway(
+                                                    color: Colors.white,
+                                                    fontSize: 24,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                'DEC',
+                                                style: GoogleFonts.raleway(
                                                   color: Colors.white,
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              'DEC',
-                                              style: GoogleFonts.raleway(
-                                                color: Colors.white,
-                                                fontSize: 18,
+                                                  fontSize: 18,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Winter Night Market',
-                                              style: GoogleFonts.raleway(
-                                                color: Colors.white60,
-                                                fontSize: 20,
+                                        const SizedBox(width: 10),
+                                        Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Winter Night Market',
+                                                style: GoogleFonts.raleway(
+                                                  color: Colors.white60,
+                                                  fontSize: 20,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Seattle, WA.  21:00',
-                                              style: GoogleFonts.raleway(
-                                                color: Colors.white60,
-                                                fontSize: 16,
-                                              ),
-                                            )
-                                          ])
-                                    ]),
+                                              Text(
+                                                'Seattle, WA.  21:00',
+                                                style: GoogleFonts.raleway(
+                                                  color: Colors.white60,
+                                                  fontSize: 16,
+                                                ),
+                                              )
+                                            ])
+                                      ]),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -342,28 +361,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             fontWeight: FontWeight.bold),
                       ),
                       InkWell(
-                        onTap: () async {
-                          setState(() {
-                            beginTweenDX = -1;
-                            beginTweenDY = .5;
-                            endTweenDY = 0.5;
-                            endTweenDX = 1;
-                          });
-                          print(beginTweenDX);
-                          controller.status == AnimationStatus.completed
-                              ? restartAnimation()
-                              : controller.forward();
-                          Future.delayed(
-                            const Duration(milliseconds: 4000),
-                            () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  return const ComingCelebrities();
-                                }),
-                              );
-                            },
-                          );
+                        onTap: () {
+                          navigate();
                         },
                         child: Text(
                           'View all',
@@ -378,17 +377,41 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                     height: 150,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
-                      children: const [
-                        Celebrities(
-                            imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
-                        Celebrities(
-                            imagePath: 'taylor_swift',
-                            celebrityName: 'Taylor Swift'),
-                        Celebrities(
-                            imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
-                        Celebrities(
-                            imagePath: 'taylor_swift',
-                            celebrityName: 'Taylor Swift'),
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            navigate();
+                          },
+                          child: Hero(
+                            tag: 'hero',
+                            child: Celebrities(
+                                imagePath: 'dua_lipa',
+                                celebrityName: 'Dua Lipa'),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            navigate();
+                          },
+                          child: Celebrities(
+                              imagePath: 'taylor_swift',
+                              celebrityName: 'Taylor Swift'),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            navigate();
+                          },
+                          child: Celebrities(
+                              imagePath: 'dua_lipa', celebrityName: 'Dua Lipa'),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            navigate();
+                          },
+                          child: Celebrities(
+                              imagePath: 'taylor_swift',
+                              celebrityName: 'Taylor Swift'),
+                        ),
                       ],
                     ),
                   ),
